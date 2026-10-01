@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* Paleta de las diapositivas: plana, luminosa, mid-century. */
+@theme {
+  --color-*: initial;
+  --color-cream: #f7f3ea;
+  --color-paper: #fffdf7;
+  --color-ink: #1b2a41;
+  --color-ink-soft: #3b4a60;
+  --color-ink-deep: #142033;
+  --color-mist: #c5ccd8;
+  --color-orange: #e07a3f;
+  --color-teal: #2a9d8f;
+  --color-mustard: #e9c46a;
+  --color-white: #ffffff;
+
+  /* Texto pensado para proyector: el chat nunca baja de 20 px. */
+  --text-chat: clamp(1.25rem, 0.95rem + 0.55vw, 1.625rem);
+  --text-chat--line-height: 1.55;
+  /* El panel también se adapta a la altura (proyectores de 768 o 800 px). */
+  --text-panel: clamp(0.95rem, min(0.86rem + 0.32vw, 1.85vh), 1.25rem);
+  --text-panel--line-height: 1.5;
+
+  --shadow-flat: 6px 6px 0 0 var(--color-ink);
+  --shadow-flat-sm: 3px 3px 0 0 var(--color-ink);
+
+  --animate-blink: blink 1.05s steps(1, end) infinite;
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Variables que crea next/font: `inline` para resolverlas donde se usan. */
+@theme inline {
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-mustard);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-orange);
+    outline-offset: 3px;
+  }
+}
+
+/*
+ * Papel continuo de teletipo: bandas laterales con agujeros de arrastre y
+ * línea de corte punteada. `local` hace que los agujeros se desplacen con el
+ * texto, como el papel de verdad.
+ */
+@utility paper-perforated {
+  --strip: 1.4rem;
+  /* Mosaicos SVG diminutos: se rasterizan una vez y se repiten (mucho más
+     barato de pintar que gradientes radiales en toda la altura del papel). */
+  --hole: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 32'%3E%3Ccircle cx='8' cy='16' r='6.4' fill='%23f7f3ea' stroke='%231b2a41' stroke-opacity='.32' stroke-width='1.6'/%3E%3C/svg%3E");
+  --tear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 11'%3E%3Crect width='2' height='6' fill='%231b2a41' fill-opacity='.22'/%3E%3C/svg%3E");
+  background-color: var(--color-paper);
+  background-image: var(--hole), var(--hole), var(--tear), var(--tear);
+  background-size:
+    1rem 2rem,
+    1rem 2rem,
+    2px 0.7rem,
+    2px 0.7rem;
+  background-position:
+    left calc((var(--strip) - 1rem) / 2) top 0,
+    right calc((var(--strip) - 1rem) / 2) top 0,
+    left var(--strip) top 0,
+    right var(--strip) top 0;
+  background-repeat: repeat-y;
+  background-attachment: local;
+
+  @variant lg {
+    --strip: 2.25rem;
+  }
+}
